@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, {  useEffect, useRef } from "react";
 import { Container, Row, Button } from "reactstrap";
 import logo from "../../assets/images/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { logout } from "../../redux/slices/user";
 import "./header.css";
+import { useDispatch, useSelector } from "react-redux";
 const Header = () => {
   const nav__links = [
     {
@@ -21,10 +22,11 @@ const Header = () => {
   ];
   const headerRef = useRef(null);
   const navigate = useNavigate();
+  const user=useSelector(state=>state.user.user)
   const menuRef=useRef(null)
-  const { user, dispatch } = useContext(AuthContext);
-  const logout = () => {
-    dispatch({ type: "LOGOUT" });
+  const dispatch=useDispatch()
+  const logOut = () => {
+    dispatch(logout())
     navigate("/login");
   };
   const toggleMenu=()=>{
@@ -84,7 +86,7 @@ const Header = () => {
                   {user ? (
                     <>
                       <h5 className="mb-0">{user.username}</h5>
-                      <Button className="btn btn-dark " onClick={logout}>
+                      <Button className="btn btn-dark " onClick={logOut}>
                         Log out
                       </Button>
                     </>

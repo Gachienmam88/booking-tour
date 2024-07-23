@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, {  useEffect, useRef, useState } from 'react'
 import '../styles/tour-detail.css'
 import { Container,Row,Col,Form,ListGroup } from 'reactstrap'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -6,27 +6,39 @@ import caculateAvgRating from '../utils/avgRating'
 import avatar from '../assets/images/avatar.jpg'
 import Booking from '../components/Booking/Booking'
 import Newsletter from '../shared/Newsletter'
-import useFetch from '../hooks/useFetch'
-import { BASE_URL } from '../utils/config'
-import { AuthContext } from '../context/AuthContext'
+import { postReview , resetStatus } from '../redux/slices/reviewSlice'
+import { useDispatch, useSelector } from 'react-redux'
 const TourDetail = () => {
   const {id}=useParams()
   const reviewMsgRef=useRef('')
   const [tourRating,setTourRating]=useState(null)
   const navigate=useNavigate()
+  const dispatch=useDispatch()
+  const user=useSelector(state=>state.user.user)
+  const tour=useSelector(state=>{
+    const tour=state.tour.tours?.find((item)=>item._id===id)
+    return tour
+  })
   //Day la data tinh , Luc sao ta se call api
-  const {data:tour,loading,error}=useFetch(`${BASE_URL}/tours/${id}`)
   // destruction properties from our object
   const {photo,title,desc,price,reviews,city,distance,maxGroupSize,address}=tour
   const {totalRating,avgRating}=caculateAvgRating(reviews)
-  const {user}=useContext(AuthContext)
   //format date
   const options={day:'numeric',month:'long',year:'numeric'}
-
-
+ const {status,error}=useSelector(state=>state.review)
   useEffect(()=>{
     window.scrollTo(0,0)
   },[tour])
+  useEffect(()=>{
+    if(status==='succeed'){
+      alert('Post successfully !')
+      dispatch(resetStatus())
+    }
+    if(status==='failed'){
+      alert('Failed to post ! '+error)
+      dispatch(resetStatus())
+    }
+  })
   //submit request to the server
   const submitHandler=async (e)=>{
     e.preventDefault()
@@ -41,22 +53,10 @@ const TourDetail = () => {
       const reviewObj={
         username:user?.username,
         reviewText,
-        rating:tourRating
+        rating:tourRating,
+        tourId:id
       }
-      console.log(reviewObj)
-      const res=await fetch(`${BASE_URL}/review/${id}`,{
-        method:'post',
-        headers:{
-          'content-type':'application/json'
-        },
-        credentials:'include',
-        body:JSON.stringify(reviewObj)
-      })
-      const result = await res.json()
-      if(!res.ok){
-        return alert(result.message)
-      }
-      alert(result.message)
+      dispatch(postReview(reviewObj))
     } catch (error) {
         alert(error)
     }
@@ -66,16 +66,11 @@ const TourDetail = () => {
     <section>
       <Container>
         {
-          loading && <h4 className='text-center pt-5'>
+          status==='loading' && <h4 className='text-center pt-5'>
             Loading..........
           </h4>
         }
-        {
-            error && <h4 className='text-center pt-5'>
-            {error}
-          </h4>
-        }
-        {!loading && !error && <Row>
+        {status!=='loading' && !error && <Row>
           <Col lg='8'>
             <div className="tour__content">
               <img src={photo} alt="" />
@@ -128,10 +123,10 @@ const TourDetail = () => {
                 </Form>
                 <ListGroup className='user__reviews'> 
                   {
-                    reviews?.map((item,index)=>{
+                    tour.reviews?.map((item,index)=>{
                       return (
                         <>
-                          <div className="review__item">
+                          <div className="review__item" key={index}>
                             <img src={avatar} alt="" />
                             <div className="w-100">
                               <div className='d-flex align-items-center justify-content-between'>

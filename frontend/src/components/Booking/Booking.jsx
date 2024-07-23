@@ -2,10 +2,10 @@ import React, { useContext, useState } from "react";
 import "./booking.css";
 import { Form, FormGroup, ListGroup, ListGroupItem, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import { BASE_URL } from "../../utils/config";
+import { useSelector } from "react-redux";
 const Booking = ({ tour, avgRating,title }) => {
-  const {user}=useContext(AuthContext)
+  const user=useSelector(state=>state.user.user)
   const { price, reviews } = tour;
   const handleChange=(e)=>{
     setBooking(prev=>{
@@ -81,7 +81,7 @@ const Booking = ({ tour, avgRating,title }) => {
             </FormGroup>
             <FormGroup className="d-flex align-items-center gap-3">
               <input type="date" placeholder=""id="bookAt" required onChange={handleChange} />
-              <input type="number" placeholder=""id="guestSize" required onChange={handleChange} />
+              <input type="number" min={0} placeholder="Enter you number guest"id="guestSize" required onChange={handleChange} />
             </FormGroup>
           </Form>
         </div>

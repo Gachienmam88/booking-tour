@@ -1,48 +1,49 @@
-import React, { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button, Col, Container, Form, FormGroup, Row } from 'reactstrap'
-import registerImg from '../assets/images/register.png'
-import userIcon from '../assets/images/user.png'
-import { AuthContext } from '../context/AuthContext'
-import { BASE_URL } from '../utils/config'
-import '../styles/login.css'
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Col, Container, Form, FormGroup, Row } from 'reactstrap';
+import registerImg from '../assets/images/register.png';
+import userIcon from '../assets/images/user.png';
+import { register, resetStatus } from '../redux/slices/user';
+import '../styles/login.css';
+import { useDispatch, useSelector } from 'react-redux';
+
 const Register = () => {
-  const [credentials,setCridentials]=useState({
-    email:undefined,
-    password:undefined,
-    username:undefined
-  })
-  const navigate=useNavigate()
-  const handleChange=(e)=>{
-    setCridentials(prev=>{
-      return {
-        ...prev,[e.target.id]:e.target.value
-      }
-    })
-  }
-  const {dispatch}=useContext(AuthContext)
-  const handleSubmit= async(e)=>{
-    e.preventDefault()
-    console.log(credentials)
-    try {
-      const res=await fetch(`${BASE_URL}/auth/register`,{
-        method:'post',
-        headers:{
-          'content-type':'application/json'
-        },
-        body:JSON.stringify(credentials)
-      })
-      const result=await res.json()
-      if(!res.ok){
-        throw new Error(result.message)
-      }
-      alert('Successfully register')
-      dispatch({type:'REGISTER_SUCCESS'})
-      navigate('/login')
-    } catch (error) {
-      alert( `${error}`)
+  const dispatch = useDispatch();
+  const status = useSelector(state => state.user.status);
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+    username: '',
+  });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setCredentials(prev => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(register(credentials));
+  };
+
+  useEffect(() => {
+    if (status === 'succeed') {
+      dispatch(resetStatus());
+      navigate('/login');
+      alert('Successfully registered!');
     }
-  }
+  }, [status, dispatch, navigate]);
+
+  useEffect(() => {
+    if (status === 'failed') {
+      alert('Something went wrong!');
+      dispatch(resetStatus());
+    }
+  }, [status, dispatch]);
+
   return (
     <>
       <section>
@@ -51,29 +52,48 @@ const Register = () => {
             <Col lg='8' className='m-auto'>
               <div className="login__container d-flex justify-content-between">
                 <div className="login__img">
-                  <img src={registerImg} alt="" />  
+                  <img src={registerImg} alt="" />
                 </div>
                 <div className="login__form">
                   <div className="user">
                     <img src={userIcon} alt="" />
                   </div>
-                  <h2>
-                    Register
-                  </h2>
+                  <h2>Register</h2>
                   <Form onSubmit={handleSubmit}>
                     <FormGroup>
-                      <input type="email" placeholder='Enter your email' required id='email'onChange={handleChange} />
+                      <input
+                        type="email"
+                        placeholder='Enter your email'
+                        required
+                        id='email'
+                        onChange={handleChange}
+                        value={credentials.email}
+                      />
                     </FormGroup>
                     <FormGroup>
-                      <input type="text" placeholder='Enter your username' required id='username'onChange={handleChange} />
+                      <input
+                        type="text"
+                        placeholder='Enter your username'
+                        required
+                        id='username'
+                        onChange={handleChange}
+                        value={credentials.username}
+                      />
                     </FormGroup>
                     <FormGroup>
-                      <input type="password" placeholder='Enter your password' required id='password'onChange={handleChange} />
+                      <input
+                        type="password"
+                        placeholder='Enter your password'
+                        required
+                        id='password'
+                        onChange={handleChange}
+                        value={credentials.password}
+                      />
                     </FormGroup>
                     <Button className='btn secondary__btn auth__btn' type='submit'>
-                        Register
+                      {status === 'loading' ? 'Register...' : 'Register'}
                     </Button>
-                    <p>Already have an account <Link to='/register'>Login here</Link></p>
+                    <p>Already have an account? <Link to='/login'>Login here</Link></p>
                   </Form>
                 </div>
               </div>
@@ -82,7 +102,7 @@ const Register = () => {
         </Container>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

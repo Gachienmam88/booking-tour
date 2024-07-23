@@ -1,36 +1,39 @@
-import React from 'react'
-import TourCard from '../../shared/TourCard'
-import { Col } from 'reactstrap'
-import { BASE_URL } from '../../utils/config'
-import useFetch from '../../hooks/useFetch'
+import React, { useEffect } from 'react';
+import TourCard from '../../shared/TourCard';
+import { Col } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import {  resetStatus } from '../../redux/slices/tour';
+
 const FeaturedTourList = () => {
-    const {data:featuredTours,loading,error}=useFetch(`${BASE_URL}/tours/search/getFeaturedTours`)
-  return (
+    const dispatch = useDispatch();
+    const { featuredTours, status, error } = useSelector(state => state.tour);
 
-    <>
-    {
-        loading && <h4>
-            Loading ........
-        </h4>
-    }
-    {
-        error && <h4>
-            {error}
-        </h4>
-    }
-    { !loading && !error &&
-        featuredTours?.map((item,index)=>{
-            return (
-                <>
-                    <Col className='mb-4' lg='3' md='6' sm='6' key={index}>
-                        <TourCard tour={item} />
-                    </Col>
-                </>
-            )
-        })
-    }
-    </>
-  )
-}
+   // Thêm dependency array để tránh gọi nhiều lần không cần thiết
 
-export default FeaturedTourList
+    useEffect(() => {
+        if (status === 'failed' || status === 'succeed') {
+            dispatch(resetStatus());
+        }
+    }, [status, dispatch]); // Dependency array để xử lý khi status thay đổi
+
+    if (status === 'loading') {
+        return <h4>Loading....</h4>;
+    }
+
+    if (status === 'failed') {
+        alert(error); // Cân nhắc sử dụng một component thông báo thay vì alert
+        return null; // Ngừng render phần còn lại nếu lỗi
+    }
+
+    return (
+        <>
+            { featuredTours?.map((item, index) => (
+                <Col className='mb-4' lg='3' md='6' sm='6' key={index}>
+                    <TourCard tour={item} />
+                </Col>
+            ))}
+        </>
+    );
+};
+
+export default FeaturedTourList;
