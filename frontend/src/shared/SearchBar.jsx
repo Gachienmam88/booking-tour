@@ -4,6 +4,7 @@ import {Col,Form,FormGroup} from 'reactstrap'
 import { BASE_URL } from '../utils/config'
 import useFetch from '../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 const SearchBar = () => {
     const locationRef=useRef('')
     const distanceRef=useRef(0)
@@ -14,11 +15,11 @@ const SearchBar = () => {
         const distance=distanceRef.current.value
         const maxGroupSize=maxGroupRef.current.value
         if(location==='' || distance===''||maxGroupSize===''){
-            return alert('Tat ca cac truong deu phai duoc dien')
+            return toast.error('Vui lòng điền hết ở tất cả các trường')
         }
         const res= await fetch(`${BASE_URL}/tours/search/getTourBySearch?city=${location}&distance=${distance}&maxGroupSize=${maxGroupSize}`)
         if(!res.ok){
-            alert('Something went wrong !')
+            toast.error('Có lỗi xảy ra vui lòng thử lại !')
         }
         const result =await res.json()
         navigate(`/tours/search/getTourBySearch?city=${location}&distance=${distance}&maxGroupSize=${maxGroupSize}`,{
@@ -34,7 +35,7 @@ const SearchBar = () => {
                         <i class="ri-map-pin-line"></i> 
                     </span>
                     <div>
-                        <h6>Location</h6>
+                        <h6>Chọn địa điểm</h6>
                         <input type="text" placeholder='Where are you going ?' ref={locationRef} />
                     </div>
                 </FormGroup>
@@ -43,7 +44,7 @@ const SearchBar = () => {
                         <i class="ri-map-pin-time-line"></i>
                     </span>
                     <div>
-                        <h6>Distance</h6>
+                        <h6>Khoảng cách di chuyển </h6>
                         <input type="number" placeholder='Distance k/m' ref={distanceRef} />
                     </div>
                 </FormGroup>
@@ -52,7 +53,7 @@ const SearchBar = () => {
                         <i class="ri-group-line"></i>
                     </span>
                     <div>
-                        <h6>Max people</h6>
+                        <h6>Số lượng người trong đoàn</h6>
                         <input type="number" placeholder='0' ref={maxGroupRef} />
                     </div>
                 </FormGroup>

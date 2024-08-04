@@ -23,16 +23,16 @@ const Home = () => {
           <Col lg='6'>
               <div className='hero__content'>
                   <div className='hero__subtitle d-flex align-items-center '>
-                      <Subtitle subtitle={'Know before you go !'} />
+                      <Subtitle subtitle={'Tìm hiểu trước chuyến đi của bạn !'} />
                       <img src={worldImg} alt="" />
                   </div>
                   <h1 className=''>
-                    Traveling opens the door to creating
+                     Khám phá thế giới, trải nghiệm khác biệt
                     <span className='highlight'>
-                      memories
+                      Vòng quanh thế giới 
                     </span>
                   </h1>
-                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil consequuntur adipisci debitis, sequi fuga vero mollitia nemo alias eum illum voluptate voluptatum error sapiente nesciunt recusandae ut quas quia vel?</p>
+                  <p>Chào mừng bạn đến với Agoda! Chúng tôi tự hào mang đến những trải nghiệm du lịch độc đáo và đầy cảm hứng. Với các tour đa dạng từ trong nước đến quốc tế, chúng tôi cam kết mang đến cho bạn những hành trình thú vị, dịch vụ chuyên nghiệp và những kỷ niệm khó quên. Hãy để chúng tôi đồng hành cùng bạn khám phá thế giới!</p>
               </div>
           </Col>
           <Col lg='2'>
@@ -59,9 +59,9 @@ const Home = () => {
    <Container>
      <Row>
        <Col lg='3'>
-         <h5 className="services__subtitle">What we services ?</h5>
+         <h5 className="services__subtitle">Khám phá ngay!</h5>
          <h2 className='services__title'>
-           We offer our best services
+           Agoda cung cấp những dịch vụ tốt nhất
          </h2>
        </Col>
        <ServiceList />
@@ -75,7 +75,7 @@ const Home = () => {
             <Col lg='12' className='mb-5'>
               <Subtitle subtitle={'Explore'} />
               <h2 className='featured__tour-title'>
-                Our featured Tours
+                Tours nổi bật của chúng tôi
               </h2>
             </Col>
             <FeaturedTourList />
@@ -89,24 +89,23 @@ const Home = () => {
         <Row>
           <Col lg='6'>
             <div className="experience__content">
-              <Subtitle subtitle={'Experience'}/>
+              <Subtitle subtitle={'Chinh phục mọi hành trình'}/>
               <h2 className=''>
-                With our all experience <br /> We will serve for you
-              </h2>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. <br/> Iste eaque, quasi vel cum expedi</p>
+                Với tất cả kinh nghiệm của chúng tôi <br /> Chúng tôi sẽ tận tâm phục vụ bạn              </h2>
+              <p>Với nhiều năm kinh nghiệm trong ngành du lịch, chúng tôi tự hào mang đến những chuyến đi đáng nhớ và an toàn nhất.  <br/> Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng giúp bạn khám phá thế giới với sự tự tin và yên tâm tuyệt đối.</p>
             </div>
             <div className="counter__wrapper d-flex align-items-center gap-5">
               <div className="counter__box">
                 <span>12+</span>
-                <h6>Successfull Trip</h6>
+                <h6>Chuyến đi thành công mỗi tuần</h6>
               </div>
               <div className="counter__box">
                 <span>2k+</span>
-                <h6>Regular clients</h6>
+                <h6>Khách hàng thường xuyên</h6>
               </div>
               <div className="counter__box">
                 <span>15+</span>
-                <h6>Years of experience</h6>
+                <h6>Năm kinh nghiệm tổ chức lữ hành</h6>
               </div>
             </div>
           </Col>
@@ -126,7 +125,7 @@ const Home = () => {
       <Row>
         <Col lg='12'>
           <Subtitle subtitle={'Gallery'}/>
-          <h2 className='gallery__title'>Visit Our tour gallery</h2>
+          <h2 className='gallery__title'>Khám phá ngay những địa danh <br/> qua những tấm ảnh thú vị</h2>
         </Col>
         <Col lg='12'>
           <MasonrylImageGallery/>
@@ -142,7 +141,7 @@ const Home = () => {
             <Col lg='12'>
               <Subtitle subtitle={'Fans love !! '}/>
               <h2 className='testimonial__title'>
-                What our fans say about us 
+                Cảm nhận của khách hàng
               </h2>
             </Col>
             <Col lg='12'>

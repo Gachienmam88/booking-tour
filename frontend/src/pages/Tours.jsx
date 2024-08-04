@@ -19,7 +19,7 @@ const Tours = () => {
   },[page,tourCount])
   return (
     <>
-      <CommonSection title={'All tours'}/>
+      <CommonSection title={'Tours của chúng tôi'}/>
       <section>
         <Container>
           <Row>

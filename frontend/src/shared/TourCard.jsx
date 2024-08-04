@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Card,CardBody } from 'reactstrap'
 import './tour-card.css'
 import caculateAvgRating from '../utils/avgRating.js'
+import formatToVND from '../utils/formatVnd.js'
 const TourCard = ({tour}) => {
     const {_id,title,city,photo,price,featured,reviews}=tour
     const {totalRating,avgRating}=caculateAvgRating(reviews)
@@ -12,7 +13,7 @@ const TourCard = ({tour}) => {
         <Card>
             <div className='tour__img'>
                 <img src={photo} alt="" />
-                {featured&&<span>Featured</span>}
+                {featured&&<span>Nổi bật</span>}
             </div>
             <CardBody>
             <div className="card__top d-flex align-items-center justify-content-between">
@@ -27,9 +28,9 @@ const TourCard = ({tour}) => {
                 <Link to={`tours/${_id}`}>{title}</Link>
             </h5>
             <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
-                <h5>${price} <span> /per person</span></h5>
+                <h5>{formatToVND(price)} vnđ <span> / 1 người</span></h5>
                 <button className='btn booking__btn'>
-                    <Link className='' to={`/tours/${_id}`}>Book now</Link>
+                    <Link className='' to={`/tours/${_id}`}>Đặt ngay</Link>
                 </button>
             </div>
         </CardBody>

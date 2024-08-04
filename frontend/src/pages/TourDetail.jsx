@@ -8,6 +8,7 @@ import Booking from '../components/Booking/Booking'
 import Newsletter from '../shared/Newsletter'
 import { postReview , resetStatus } from '../redux/slices/reviewSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
 const TourDetail = () => {
   const {id}=useParams()
   const reviewMsgRef=useRef('')
@@ -31,14 +32,16 @@ const TourDetail = () => {
   },[tour])
   useEffect(()=>{
     if(status==='succeed'){
-      alert('Post successfully !')
+      toast.success("Cảm ơn bạn đã phản hồi !")
+      setTourRating(null)
       dispatch(resetStatus())
     }
     if(status==='failed'){
-      alert('Failed to post ! '+error)
+      toast.error('Đã có lỗi xảy ra ! '+error)
+      setTourRating(null)
       dispatch(resetStatus())
     }
-  })
+  },[status, dispatch, error])
   //submit request to the server
   const submitHandler=async (e)=>{
     e.preventDefault()
@@ -48,10 +51,14 @@ const TourDetail = () => {
     try {
       if(!user || user===undefined || user===null){
         navigate('/login')
-        return alert('Please sign in !')
+        return toast.error('Vui lòng đăng nhập trước khi bình luận !')
+      }
+      if(tourRating===null){
+        return toast.error('Vui lòng đánh giá số sao bạn mong muốn !')
       }
       const reviewObj={
         username:user?.username,
+        userImg:user?.photo,
         reviewText,
         rating:tourRating,
         tourId:id
@@ -89,23 +96,23 @@ const TourDetail = () => {
                    <i class="ri-map-pin-2-line"></i> {city}
                   </span>
                   <span>
-                   <i class="ri-exchange-dollar-line"></i> {price} $ per person
+                   <i class="ri-exchange-dollar-line"></i> {price} vnđ / 1 người
                   </span>
                   <span>
                    <i class="ri-map-pin-time-line"></i> {distance} km
                   </span>
                   <span>
-                   <i class="ri-group-line"></i> {maxGroupSize} people
+                   <i class="ri-group-line"></i> {maxGroupSize} Người/nhóm
                   </span>
                 </div>
                 <h5 className=''>
-                  Decription
+                  Mô tả
                 </h5>
                 <p>{desc}</p>
               </div>
               {/* Tour review section start */}
               <div className="tour__reviews mt-4">
-                <h4>Reviews ({reviews?.length}) </h4>
+                <h4>Đánh giá ({reviews?.length}) </h4>
                 <Form onSubmit={submitHandler}>
                   <div className="rating-group d-flex align-items-center gap-3 mb-4">
                       <span onClick={()=>setTourRating(1)}>1 <i className={tourRating===1 ?'star__active ri-star-s-fill':'ri-star-s-fill'} class="ri-star-s-fill"></i></span>
@@ -115,19 +122,20 @@ const TourDetail = () => {
                       <span onClick={()=>setTourRating(5)}>5 <i className={tourRating===5 ?'star__active ri-star-s-fill':'ri-star-s-fill'} class="ri-star-s-fill"></i></span>
                   </div>
                   <div className='review__input'>
-                    <input type="text" ref={reviewMsgRef} placeholder='Share your thoughts' required />
+                    <input type="text" ref={reviewMsgRef} placeholder='Chia sẻ đánh giá của bạn' required />
                     <button className='btn primary__btn text-white' type='submit'>
-                      Submit
+                      Gửi
                     </button>
                   </div>
                 </Form>
                 <ListGroup className='user__reviews'> 
                   {
                     tour.reviews?.map((item,index)=>{
+                      console.log(item)
                       return (
                         <>
                           <div className="review__item" key={index}>
-                            <img src={avatar} alt="" />
+                            <img src={item?.userImg?item.userImg:avatar} alt="" />
                             <div className="w-100">
                               <div className='d-flex align-items-center justify-content-between'>
                                 <div>

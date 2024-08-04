@@ -7,11 +7,11 @@ const Footer = () => {
   const quick__links = [
     {
       path: "/home",
-      display: "Home",
+      display: "Trang chủ",
     },
     {
       path: "/about",
-      display: "About",
+      display: "Giới thiệu",
     },
     {
       path: "/tours",
@@ -21,18 +21,18 @@ const Footer = () => {
   const quick__links2 = [
     {
       path: "/gallery",
-      display: "Gallery",
+      display: "Triển lãm",
     },
     {
       path: "/login",
-      display: "Login",
+      display: "Đăng nhập",
     },
     {
       path: "/register",
-      display: "Register",
+      display: "Đăng ký",
     },
   ];
-  const year=new Date().getFullYear
+  const year=new Date().getFullYear()
   return (
     <>
       <footer className="footer">
@@ -41,7 +41,7 @@ const Footer = () => {
             <Col lg="3">
               <div className="logo">
                 <img src={logo} alt="" />
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                <p>Theo dõi chúng tôi trên mạng xã hội để nhận ưu đãi!</p>
                 <div className="social__links d-flex align-items-center gap-4">
                   <span>
                     <Link to='#'>
@@ -67,7 +67,7 @@ const Footer = () => {
               </div>
             </Col>
             <Col lg='3'>
-              <h5 className="footer__link-title">Discovery</h5>
+              <h5 className="footer__link-title">Khám phá</h5>
               <ListGroup className="footer__quick-links">
                 {
                   quick__links.map((item,index)=>{
@@ -83,7 +83,7 @@ const Footer = () => {
               </ListGroup>
             </Col>
             <Col lg='3'>
-            <h5 className="footer__link-title">Quick links</h5>
+            <h5 className="footer__link-title">Truy cập nhanh</h5>
               <ListGroup className="footer__quick-links">
                 {
                   quick__links2.map((item,index)=>{
@@ -99,17 +99,17 @@ const Footer = () => {
               </ListGroup>
             </Col>
             <Col lg='3'>
-            <h5 className="footer__link-title">Contact</h5>
+            <h5 className="footer__link-title">Liên hệ</h5>
               <ListGroup className="footer__quick-links">
                         <ListGroupItem  className="ps-0 border-0 d-flex align-items-center gap-3">
                           <h6 className="mb-0 d-flex align-items-center gap-2">
                             <span>
                               <i class="ri-map-pin-line"></i> 
                             </span>
-                            Address:
+                            Địa chỉ:
                           </h6>
                           <p className="mb-0">
-                            Ha Noi , Viet Nam
+                            Hà Nội , Việt Nam
                           </p>
                         </ListGroupItem>
                         <ListGroupItem  className="ps-0 border-0 d-flex align-items-center gap-3">
@@ -127,7 +127,7 @@ const Footer = () => {
                             <span>
                             <i class="ri-phone-line"></i> 
                             </span>
-                            Call me:
+                            Liên hệ
                           </h6>
                           <p className="mb-0">
                             +84 969335203
@@ -137,7 +137,7 @@ const Footer = () => {
             </Col>
             <Col lg='12' className="text-center">
                 <p className="copyright">
-                  Copyright {year} , design and develop by GaChienMam88 .All rights reserved 
+                  Copyright {year} , design and develop by GaChienMam88 . All rights reserved 
                 </p> 
             </Col>
           </Row>

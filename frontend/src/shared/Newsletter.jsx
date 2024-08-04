@@ -10,15 +10,16 @@ const Newsletter = () => {
             <Col lg='6'> 
                 <div className="newsletter__content">
                     <h2 className=''>
-                        Subcribe new to get useful traveling information
+                        {/* Subcribe new to get useful traveling information */}
+                        Đăng kí với chúng tôi ngay để biết được những thông tin hữu ích về du lịch
                     </h2>
                     <div className="newsletter__input">
-                        <input type="text" placeholder='Enter your email' />
+                        <input type="text" placeholder='Điền email của bạn' />
                         <button className='btn newsletter__btn'>
-                            Subcribe
+                            Đăng ký ngay
                         </button>
                     </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id iure harum similique excepturi consequatur! Nulla dolorem porro incidunt! Excepturi ab qui ea officiis illo provident sequi eius atque, alias iure.</p>
+                    <p>Đăng ký ngay với chúng tôi để nhận những thông tin ưu đãi hấp dẫn và cập nhật các thông báo giảm giá đặc biệt. Đừng bỏ lỡ cơ hội trải nghiệm những chuyến du lịch tuyệt vời với mức giá ưu đãi nhất. Hãy là người đầu tiên nhận thông tin về các chương trình khuyến mãi và sự kiện du lịch đặc biệt!</p>
                 </div>
             </Col>
             <Col lg='6'>

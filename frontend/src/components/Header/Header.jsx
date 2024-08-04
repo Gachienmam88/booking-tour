@@ -2,18 +2,19 @@ import React, {  useEffect, useRef } from "react";
 import { Container, Row, Button } from "reactstrap";
 import logo from "../../assets/images/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../../redux/slices/user";
 import "./header.css";
 import { useDispatch, useSelector } from "react-redux";
+import { logout , resetLogoutStatus } from "../../redux/slices/user";
+import toast from "react-hot-toast";
 const Header = () => {
   const nav__links = [
     {
       path: "home",
-      display: "Home",
+      display: "Trang chủ",
     },
     {
       path: "/about",
-      display: "About",
+      display: "Giới thiệu",
     },
     {
       path: "tours",
@@ -22,12 +23,12 @@ const Header = () => {
   ];
   const headerRef = useRef(null);
   const navigate = useNavigate();
-  const user=useSelector(state=>state.user.user)
+  const {user,logoutStatus,logoutError}=useSelector(state=>state.user)
   const menuRef=useRef(null)
   const dispatch=useDispatch()
+
   const logOut = () => {
     dispatch(logout())
-    navigate("/login");
   };
   const toggleMenu=()=>{
     menuRef.current.classList.toggle('show__menu')
@@ -48,6 +49,17 @@ const Header = () => {
     stickyHeaderFunc();
     return window.removeEventListener("scroll", stickyHeaderFunc);
   });
+  useEffect(()=>{
+    if(logoutStatus==='succeed'){
+      navigate('/login')
+      toast.success('Đăng xuất thành công !')
+      dispatch(resetLogoutStatus())
+    } 
+    if(logoutStatus==='failed'){
+      toast.error(logoutError)
+      dispatch(resetLogoutStatus())
+    }
+  },[logoutStatus, logoutError, navigate,dispatch,user])
   return (
     <>
       <header className="header" ref={headerRef}>
@@ -84,22 +96,25 @@ const Header = () => {
               <div className="nav__right d-flex align-items-center gap-4 ">
                 <div className="nav__btns d-flex align-items-center gap-4">
                   {user ? (
-                    <>
+                    <> 
+                      {user.photo && <><div className="photo__img">
+                        <img src={user.photo} alt="" className="user__img" />
+                      </div></>}
                       <h5 className="mb-0">{user.username}</h5>
                       <Button className="btn btn-dark " onClick={logOut}>
-                        Log out
+                        {logoutStatus==='loading' ? 'Đăng xuất ... ':'Đăng xuất'}
                       </Button>
                     </>
                   ) : (
                     <>
                       <Button className="btn secondary__btn">
                         <Link className="" to="/login">
-                          Login
+                          Đăng nhập
                         </Link>
                       </Button>
                       <Button className="btn primary__btn">
                         <Link className="" to="/register">
-                          Register
+                          Đăng ký
                         </Link>
                       </Button>
                     </>

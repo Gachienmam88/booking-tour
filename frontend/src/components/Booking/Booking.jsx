@@ -1,9 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import "./booking.css";
 import { Form, FormGroup, ListGroup, ListGroupItem, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import formatVnd from "../../utils/formatVnd"
 const Booking = ({ tour, avgRating,title }) => {
   const user=useSelector(state=>state.user.user)
   const { price, reviews } = tour;
@@ -22,7 +24,7 @@ const Booking = ({ tour, avgRating,title }) => {
     try {
       if(!user || user===undefined || user===null){
         navigate('/login')
-        return alert('Please sign in')
+        return toast.error('Vui lòng đăng nhập trước khi thanh toán ')
       }
       const res=await fetch(`${BASE_URL}/booking`,{
         method:'post',
@@ -38,7 +40,7 @@ const Booking = ({ tour, avgRating,title }) => {
       }
       navigate('/thank-you')
     } catch (error) {
-      alert(error)
+      toast.error(error)
     }
     
   }
@@ -51,7 +53,7 @@ const Booking = ({ tour, avgRating,title }) => {
     guestSize:1,
     bookAt:''
   })
-  const serviceFee=10
+  const serviceFee=1500000
   const totalAmount=Number(price)*Number(booking.guestSize)+Number(serviceFee)
 
   return (
@@ -59,7 +61,7 @@ const Booking = ({ tour, avgRating,title }) => {
       <div className="booking">
         <div className="booking__top d-flex align-items-center justify-content-between">
           <h3>
-            {price} $ <span>/per person</span>
+            {formatVnd(price)} vnđ  <span>/ Người</span>
           </h3>
           <span className="tour__rating d-flex align-items-center gap-1 ">
             <i
@@ -71,37 +73,37 @@ const Booking = ({ tour, avgRating,title }) => {
         </div>
         {/* booking form start */}
         <div className="booking__form">
-          <h5>Information</h5>
+          <h5>Thông tin</h5>
           <Form className="booking__info-form" onSubmit={handleSubmit}>
             <FormGroup>
-              <input type="text" placeholder="Full name"id="fullName" required onChange={handleChange}/>
+              <input type="text" placeholder="Nhập họ tên đầy đủ"id="fullName" required onChange={handleChange}/>
             </FormGroup>
             <FormGroup>
-              <input type="number" placeholder="Enter your phone number"id="phone" required onChange={handleChange} />
+              <input type="number" placeholder="Nhập số điện thoại"id="phone" required onChange={handleChange} />
             </FormGroup>
             <FormGroup className="d-flex align-items-center gap-3">
-              <input type="date" placeholder=""id="bookAt" required onChange={handleChange} />
-              <input type="number" min={0} placeholder="Enter you number guest"id="guestSize" required onChange={handleChange} />
+              <input type="date" placeholder="Đặt ngày "id="bookAt" required onChange={handleChange} />
+              <input type="number" min={0} placeholder="Nhập số lượng người "id="guestSize" required onChange={handleChange} />
             </FormGroup>
           </Form>
         </div>
         <div className="booking__bottom">
           <ListGroup>
             <ListGroupItem className="border-0 px-0 ">
-              <h5 className="d-flex align-items-center gap-1">$ {price} <i class="ri-close-line"></i> / {booking.guestSize} person </h5>
-              <span>$ {price}</span>
+              <h5 className="d-flex align-items-center gap-1">  {formatVnd(price)} vnđ  <i class="ri-close-line"></i> / {booking.guestSize} Người </h5>
+              <span> {formatVnd(price)} vnđ </span>
             </ListGroupItem>
             <ListGroupItem className="border-0 px-0">
-              <h5>Service charge</h5>
-              <span>$ {serviceFee}</span>
+              <h5>Phí dịch vụ</h5>
+              <span> {formatVnd(serviceFee)} vnđ </span>
             </ListGroupItem>
             <ListGroupItem className="border-0 px-0 total">
-              <h5>Total</h5>
-              <span>$ {totalAmount}</span>
+              <h5>Tổng cộng</h5>
+              <span> {formatVnd(totalAmount)} vnđ </span>
             </ListGroupItem>
           </ListGroup>
           <Button className="btn primary__btn w-100 mt-4" onClick={handleSubmit}>
-            Book Now
+            Đặt ngay
           </Button>
         </div>
         {/* booking form end  */}

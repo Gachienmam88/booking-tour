@@ -1,24 +1,27 @@
-import React, { useState, } from 'react';
-import { Container, Col, Row, Button, FormGroup, Form } from 'reactstrap';
-import '../styles/login.css';
-import loginImg from '../assets/images/login.png';
-import userIcon from '../assets/images/user.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { login ,resetStatus} from '../redux/slices/user'; // cập nhật đường dẫn chính xác
- 
+import React, { useEffect, useState } from "react";
+import { Container, Col, Row, Button, FormGroup, Form } from "reactstrap";
+import "../styles/login.css";
+import loginImg from "../assets/images/login.png";
+import userIcon from "../assets/images/user.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login, resetLoginStatus } from "../redux/slices/user"; // cập nhật đường dẫn chính xác
+import toast from "react-hot-toast";
+import { Audio } from "react-loader-spinner";
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, user } = useSelector(state => state.user); // Lấy user từ state
+  const { loginStatus, user, loginError } = useSelector((state) => state.user); // Lấy user từ state
   const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
-    setCredentials(prev => ({
-      ...prev, [e.target.id]: e.target.value
+    setCredentials((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
     }));
   };
 
@@ -27,19 +30,24 @@ const Login = () => {
     dispatch(login(credentials));
   };
 
- 
-    if (status === 'succeed' && user) {
-      navigate('/home'); // Chuyển hướng đến trang chính sau khi đăng nhập thành công
-      dispatch(resetStatus())
+  useEffect(() => {
+    if (loginStatus === "succeed" && user) {
+      navigate("/home"); // Chuyển hướng đến trang chính sau khi đăng nhập thành công\
+      toast.success("Đăng nhập thành công !");
+      dispatch(resetLoginStatus());
     }
+    if (loginStatus === "failed") {
+      toast.error(loginError);
+      dispatch(resetLoginStatus());
+    }
+  }, [dispatch, navigate, loginStatus, user, loginError]);
 
   return (
     <>
-
       <section>
         <Container>
           <Row>
-            <Col lg='8' className='m-auto'>
+            <Col lg="8" className="m-auto">
               <div className="login__container d-flex justify-content-between">
                 <div className="login__img">
                   <img src={loginImg} alt="" />
@@ -48,18 +56,48 @@ const Login = () => {
                   <div className="user">
                     <img src={userIcon} alt="" />
                   </div>
-                  <h2>Login</h2>
+                  <h2>Đăng nhập</h2>
                   <Form onSubmit={handleSubmit}>
                     <FormGroup>
-                      <input type="email" placeholder='Enter your email' required id='email' onChange={handleChange} />
+                      <input
+                        type="email"
+                        placeholder="Nhập email của bạn"
+                        required
+                        id="email"
+                        onChange={handleChange}
+                      />
                     </FormGroup>
                     <FormGroup>
-                      <input type="password" placeholder='Enter your password' required id='password' onChange={handleChange} />
+                      <input
+                        type="password"
+                        placeholder="Nhập mật khẩu"
+                        required
+                        id="password"
+                        onChange={handleChange}
+                      />
                     </FormGroup>
-                    <Button className='btn secondary__btn auth__btn' type='submit'>
-                      {status === 'loading' ? 'Login....' : 'Login'}
+                    <Button
+                      className="btn secondary__btn auth__btn"
+                      type="submit"
+                    >
+                      {loginStatus === "loading" ? (
+                        <Audio
+                          height="20"
+                          width="20"
+                          radius="9"
+                          color="blue"
+                          ariaLabel="loading"
+                          wrapperStyle
+                          wrapperClass
+                        />
+                      ) : (
+                        "Đăng nhập"
+                      )}
                     </Button>
-                    <p>Don't have an account <Link to='/register'>Create an account</Link></p>
+                    <p>
+                      Bạn chưa có tài khoản ?{" "}
+                      <Link to="/register">Tạo ngay</Link>
+                    </p>
                   </Form>
                 </div>
               </div>

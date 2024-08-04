@@ -4,15 +4,17 @@
     // get review
     export const fetchReview = createAsyncThunk(
         'review/getReview',
-        async (id, { rejectWithValue }) => {
+        async (_, { rejectWithValue }) => {
+            console.log(1)
             try {
-                const response = await fetch(`${BASE_URL}/review/${id}`);
+                const response = await fetch(`${BASE_URL}/review`);
                 if (!response.ok) {
                     const errorData = await response.json();
                     return rejectWithValue(errorData);
                 }
-                const data = await response.json();
-                return data;
+                const data = await response.json(); 
+                console.log(data)
+                return data.data;
             } catch (error) {
                 return rejectWithValue(error.message);
             }
@@ -48,14 +50,21 @@
     const userSlice = createSlice({
         name: 'review',
         initialState: {
+            reviews:[],
             status: '',
             error: null,
+            statusGet:'lavs',
+            errorGet:'aaa'
         },
         reducers: {
             resetStatus(state) {
                 state.status = '';
                 state.error = null;
-            }   
+            } , 
+            resetFetchStatus(state){
+                state.statusGet='';
+                state.errorGet=null
+            } 
         },
         extraReducers: (builder) => {
             builder
@@ -69,8 +78,20 @@
                 state.error=action.payload;
                 state.status='failed'
             })
+            .addCase(fetchReview.pending,(state)=>{
+                state.statusGet='loading'
+            })
+            .addCase(fetchReview.fulfilled,(state,action)=>{
+                state.statusGet='succeed'
+                state.reviews=action.payload
+            })
+            .addCase(fetchReview.rejected,(state,action)=>{
+                state.errorGet=action.payload;
+                state.statusGet='failed'
+            })
+            
         }
     });
 
-    export const { logout, resetStatus } = userSlice.actions;
+    export const { resetStatus,resetFetchStatus } = userSlice.actions;
     export default userSlice.reducer;

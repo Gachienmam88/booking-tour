@@ -46,50 +46,96 @@ export const register = createAsyncThunk(
         }
     }
 );
+export const logout=createAsyncThunk(
+    'auth/logout',
+    async(_,{rejectWithValue})=>{
+        try {
+            const response=await fetch(`${BASE_URL}/auth/logout`,{
+                method:'post',
+                headers:{
+                    'content-type':'application/json'
+                },
+                credentials:'include'
+            }
+            )
+            if(!response.ok){
+                const errorData=await response.json()
+                return rejectWithValue(errorData.message)
+            }
+            // const data=await response.json()
 
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+)
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        user: null,
-        status: '',
-        error: null,
+    //     user:localStorage.getItem('user')!==undefined?JSON.parse(localStorage.getItem('user')):null,
+    // loading:false,
+    // error:null
+        user: localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null,
+        loginStatus: 'none',
+        logoutStatus:'none',
+        loginError: null,
+        logoutError:null,
+        registerStatus:'none',
+        registerError:null
     },
     reducers: {
-        logout(state) {
-            state.user = null;
-            state.status = '';
-            state.error = null;
+
+        resetLoginStatus(state) {
+            state.loginStatus = '';
+            state.loginError = null;
         },
-        resetStatus(state) {
-            state.status = '';
-            state.error = null;
+        resetLogoutStatus(state){
+            state.logoutStatus='';
+            state.logoutError=null;
+        },
+        resetRegisterStatus(state){
+            state.registerStatus='';
+            state.registerError=null
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
-                state.status = 'loading';
+                state.loginStatus = 'loading';
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.status = 'succeed';
+                state.loginStatus = 'succeed';
                 state.user = action.payload.data;
+                localStorage.setItem('user',JSON.stringify(action.payload.data))
             })
             .addCase(login.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || action.error.message;
+                state.loginStatus = 'failed';
+                state.loginError = action.payload.message || action.error.message;
             })
             .addCase(register.pending, (state) => {
-                state.status = 'loading';
+                state.registerStatus = 'loading';
             })
             .addCase(register.fulfilled, (state) => {
-                state.status = 'succeed';
+                state.registerStatus = 'succeed';
             })
             .addCase(register.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || action.error.message;
-            });
+                state.registerStatus = 'failed';
+                state.registerError = action.payload.message || action.error.message;
+            })
+            .addCase(logout.pending,(state)=>{
+                state.logoutStatus='loading'
+            })
+            .addCase(logout.fulfilled,(state)=>{
+                state.logoutStatus='succeed';
+                state.user=null;
+                localStorage.setItem('user','')
+            })
+            .addCase(logout.rejected,(state,action)=>{
+                state.logoutStatus='failed';
+                state.logoutError=action.payload.message || action.error.message;
+            })
     }
 });
 
-export const { logout, resetStatus } = userSlice.actions;
+export const {  resetLoginStatus,resetLogoutStatus,resetRegisterStatus } = userSlice.actions;
 export default userSlice.reducer;
