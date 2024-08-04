@@ -21,3 +21,18 @@ export const createReview =async(req,res)=>{
         })
     }
 }
+export const getReview=async(req,res)=>{
+    try {
+        const reviews=await Review.find({})
+        res.status(200).json({
+            success:true,
+            message:"Get successfully !",
+            data:reviews
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Intenal server error !"
+        })
+    }
+}
