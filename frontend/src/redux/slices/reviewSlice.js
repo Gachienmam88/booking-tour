@@ -5,7 +5,7 @@
     export const fetchReview = createAsyncThunk(
         'review/getReview',
         async (_, { rejectWithValue }) => {
-            console.log(1)
+            
             try {
                 const response = await fetch(`${BASE_URL}/review`);
                 if (!response.ok) {
@@ -13,7 +13,7 @@
                     return rejectWithValue(errorData);
                 }
                 const data = await response.json(); 
-                console.log(data)
+            
                 return data.data;
             } catch (error) {
                 return rejectWithValue(error.message);
@@ -22,7 +22,7 @@
     );
     // post review
     export const postReview = createAsyncThunk(
-        'auth/register',
+        'review/postReview',
         async (reviewObj, { rejectWithValue , getState }) => {
             try {
                 const {tourId,...rest}=reviewObj
@@ -47,14 +47,14 @@
         }
     );
 
-    const userSlice = createSlice({
+    const reviewSlice = createSlice({
         name: 'review',
         initialState: {
             reviews:[],
             status: '',
             error: null,
-            statusGet:'lavs',
-            errorGet:'aaa'
+            statusGet:'none',
+            errorGet:null
         },
         reducers: {
             resetStatus(state) {
@@ -72,6 +72,7 @@
                 state.status='loading'
             })
             .addCase(postReview.fulfilled,(state)=>{
+                console.log(1)
                 state.status='succeed'
             })
             .addCase(postReview.rejected,(state,action)=>{
@@ -93,5 +94,5 @@
         }
     });
 
-    export const { resetStatus,resetFetchStatus } = userSlice.actions;
-    export default userSlice.reducer;
+    export const { resetStatus,resetFetchStatus } = reviewSlice.actions;
+    export default reviewSlice.reducer;

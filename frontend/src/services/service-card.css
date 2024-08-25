@@ -3,6 +3,10 @@
     border-bottom:1px solid #faa63586;
     border-right:1px solid #faa63586;
     border-radius:0.5rem;
+    transition: 0.3s ease-in-out;
+}
+.service__item:hover{
+    transform: translateY(-20px);
 }
 .service__img{
     width:50px;
@@ -18,7 +22,6 @@
 }
 .service__img img{
     width:100%;
-
 }
 .service__item h5{
     font-size: 1.1rem;

@@ -1,5 +1,9 @@
 .tour__card{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.2s ease-in-out;
+}
+.tour__card:hover{
+    transform: translateY(-20px);
 }
 .tour__img img{
     width: 100%;

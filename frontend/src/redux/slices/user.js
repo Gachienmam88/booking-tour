@@ -116,6 +116,7 @@ const userSlice = createSlice({
                 state.registerStatus = 'loading';
             })
             .addCase(register.fulfilled, (state) => {
+                console.log(1)
                 state.registerStatus = 'succeed';
             })
             .addCase(register.rejected, (state, action) => {

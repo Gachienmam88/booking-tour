@@ -20,7 +20,6 @@ const Booking = ({ tour, avgRating,title }) => {
   //send data to the server
   const handleSubmit=async (e)=>{
     e.preventDefault()
-    console.log(booking)
     try {
       if(!user || user===undefined || user===null){
         navigate('/login')

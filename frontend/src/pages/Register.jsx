@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Col, Container, Form, FormGroup, Row } from "reactstrap";
 import registerImg from "../assets/images/register.png";
 import userIcon from "../assets/images/user.png";
@@ -8,6 +8,7 @@ import "../styles/login.css";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import uploadCloudinary from "../utils/uploadCloudinary";
+import { HashLoader } from "react-spinners";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const Register = () => {
     e.preventDefault();
     dispatch(register(credentials));
   };
-
+  const path_name=useLocation()
   useEffect(() => {
     if (status === "succeed") {
       dispatch(resetRegisterStatus());
@@ -55,15 +56,14 @@ const Register = () => {
         "Đăng ký thành công ! Vui lòng đăng nhập để sử dụng ứng dụng"
       );
     }
-  }, [status, dispatch, navigate]);
-
-  useEffect(() => {
     if (status === "failed") {
       toast.error(error);
       dispatch(resetRegisterStatus());
     }
-  }, [status, dispatch, error]);
-
+  }, [status, dispatch, navigate,error]);
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[path_name])
   return (
     <>
       <section>
@@ -78,7 +78,7 @@ const Register = () => {
                   <div className="user">
                     <img src={userIcon} alt="" />
                   </div>
-                  <h2>Register</h2>
+                  <h2>Đăng ký</h2>
                   <Form onSubmit={handleSubmit}>
                     <FormGroup>
                       <input
@@ -143,7 +143,7 @@ const Register = () => {
                       className="btn secondary__btn auth__btn"
                       type="submit"
                     >
-                      {status === "loading" ? "Đăng ký..." : "Đăng ký"}
+                      {status === "loading" ?  <HashLoader size={25} color="#fff" /> : "Đăng ký"}
                     </Button>
                     <p>
                       Bạn đã có tài khoản ? <Link to="/login">Đăng nhập</Link>

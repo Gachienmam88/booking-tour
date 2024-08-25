@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommonSection from './../shared/CommonSection'
 import { Container,Row,Col } from 'reactstrap'
 import { useLocation } from 'react-router-dom'
 import TourCard from '../shared/TourCard'
 import Newsletter from '../shared/Newsletter'
 const SearchResultList = () => {
+    const path_name=useLocation()
     const location=useLocation()
     const [data]=useState(location.state)
-    console.log(data) 
+    useEffect(()=>{
+        window.scrollTo(0,0)
+      },[path_name])
   return (
     <>
         <CommonSection title={'Tour search result'} />

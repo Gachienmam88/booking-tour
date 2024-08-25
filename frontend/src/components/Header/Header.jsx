@@ -6,6 +6,8 @@ import "./header.css";
 import { useDispatch, useSelector } from "react-redux";
 import { logout , resetLogoutStatus } from "../../redux/slices/user";
 import toast from "react-hot-toast";
+import SearchBar from "../../shared/SearchBar";
+import { HashLoader } from "react-spinners";
 const Header = () => {
   const nav__links = [
     {
@@ -22,6 +24,7 @@ const Header = () => {
     },
   ];
   const headerRef = useRef(null);
+  const navRef=useRef(null)
   const navigate = useNavigate();
   const {user,logoutStatus,logoutError}=useSelector(state=>state.user)
   const menuRef=useRef(null)
@@ -31,8 +34,15 @@ const Header = () => {
     dispatch(logout())
   };
   const toggleMenu=()=>{
-    menuRef.current.classList.toggle('show__menu')
+    if (menuRef.current) {
+      menuRef.current.classList.toggle('show__menu');
   }
+    if (navRef.current) {
+      navRef.current.classList.toggle('show__nav');
+  }
+  
+  }
+  
   const stickyHeaderFunc = () => {
     window.addEventListener("scroll", () => {
       if (
@@ -72,8 +82,10 @@ const Header = () => {
               </div>
               {/* end logo */}
               {/* menu start */}
-              <div className="navigation" ref={menuRef} onClick={toggleMenu}>
-                <ul className="menu d-flex align-items-center gap-5">
+              <div className="navigation" ref={menuRef} onClick={()=>{
+                toggleMenu()
+              }}>
+                <ul className="menu d-flex align-items-center gap-5" ref={navRef}>
                   {nav__links.map((item, index) => {
                     return (
                       <>
@@ -102,7 +114,7 @@ const Header = () => {
                       </div></>}
                       <h5 className="mb-0">{user.username}</h5>
                       <Button className="btn btn-dark " onClick={logOut}>
-                        {logoutStatus==='loading' ? 'Đăng xuất ... ':'Đăng xuất'}
+                        {logoutStatus==='loading' ?   <HashLoader size={25} color="#fff" />:'Đăng xuất'}
                       </Button>
                     </>
                   ) : (

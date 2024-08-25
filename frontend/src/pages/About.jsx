@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import Subtitle from "../shared/Subtitle";
 import heroImg from "../assets/images/gallery-03.jpg";
@@ -9,8 +9,10 @@ import CollectiveImg from "../assets/images/tapthe2.jpg";
 import "../styles/about.css";
 import { AiOutlineTeam } from "react-icons/ai";
 import { IoPhonePortraitOutline } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
 
 const About = () => {
+  const path_name=useLocation()
   const featuredServices = [
     {
       subtitle: "Đa dạng và phong phú",
@@ -28,7 +30,9 @@ const About = () => {
       img: <FaShieldAlt />,
     },
   ];
-
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[path_name])
   return (
     <>
       <section>

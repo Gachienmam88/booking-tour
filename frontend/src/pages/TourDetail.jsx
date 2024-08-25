@@ -6,9 +6,10 @@ import caculateAvgRating from '../utils/avgRating'
 import avatar from '../assets/images/avatar.jpg'
 import Booking from '../components/Booking/Booking'
 import Newsletter from '../shared/Newsletter'
-import { postReview , resetStatus } from '../redux/slices/reviewSlice'
+import { postReview , resetStatus ,resetFetchStatus } from '../redux/slices/reviewSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
+import { HashLoader } from 'react-spinners'
 const TourDetail = () => {
   const {id}=useParams()
   const reviewMsgRef=useRef('')
@@ -26,22 +27,34 @@ const TourDetail = () => {
   const {totalRating,avgRating}=caculateAvgRating(reviews)
   //format date
   const options={day:'numeric',month:'long',year:'numeric'}
- const {status,error}=useSelector(state=>state.review)
+ const {statusGet,errorGet,status,error}=useSelector(state=>state.review)
   useEffect(()=>{
     window.scrollTo(0,0)
   },[tour])
+  const resetMsgRef=()=>{
+    reviewMsgRef.current.value=""
+  }
   useEffect(()=>{
     if(status==='succeed'){
       toast.success("Cảm ơn bạn đã phản hồi !")
       setTourRating(null)
+      resetMsgRef()
       dispatch(resetStatus())
     }
     if(status==='failed'){
       toast.error('Đã có lỗi xảy ra ! '+error)
+      resetMsgRef()
       setTourRating(null)
       dispatch(resetStatus())
     }
-  },[status, dispatch, error])
+    if(statusGet==='succeed'){
+      dispatch(resetStatus())
+    }
+    if(statusGet==='failed'){
+      toast.error('Đã có lỗi xảy ra khi loading sản phẩm ! '+errorGet)
+      dispatch(resetFetchStatus())
+    }
+  },[statusGet, dispatch, errorGet, status,error])
   //submit request to the server
   const submitHandler=async (e)=>{
     e.preventDefault()
@@ -65,7 +78,7 @@ const TourDetail = () => {
       }
       dispatch(postReview(reviewObj))
     } catch (error) {
-        alert(error)
+        toast.error(error)
     }
   }
   return (
@@ -73,11 +86,11 @@ const TourDetail = () => {
     <section>
       <Container>
         {
-          status==='loading' && <h4 className='text-center pt-5'>
-            Loading..........
+          statusGet==='loading' && <h4 className='text-center pt-5'>
+            <HashLoader size={100} color='#fff' />
           </h4>
         }
-        {status!=='loading' && !error && <Row>
+        {statusGet!=='loading' && !errorGet && <Row>
           <Col lg='8'>
             <div className="tour__content">
               <img src={photo} alt="" />
@@ -124,14 +137,15 @@ const TourDetail = () => {
                   <div className='review__input'>
                     <input type="text" ref={reviewMsgRef} placeholder='Chia sẻ đánh giá của bạn' required />
                     <button className='btn primary__btn text-white' type='submit'>
-                      Gửi
+                      {status==='loading'?<HashLoader size={25} color='#fff'/>:"Gửi"}
                     </button>
                   </div>
                 </Form>
+                
                 <ListGroup className='user__reviews'> 
                   {
                     tour.reviews?.map((item,index)=>{
-                      console.log(item)
+                
                       return (
                         <>
                           <div className="review__item" key={index}>

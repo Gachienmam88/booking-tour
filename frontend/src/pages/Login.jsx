@@ -3,11 +3,12 @@ import { Container, Col, Row, Button, FormGroup, Form } from "reactstrap";
 import "../styles/login.css";
 import loginImg from "../assets/images/login.png";
 import userIcon from "../assets/images/user.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, resetLoginStatus } from "../redux/slices/user"; // cập nhật đường dẫn chính xác
 import toast from "react-hot-toast";
 import { Audio } from "react-loader-spinner";
+import { HashLoader } from "react-spinners";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(login(credentials));
   };
-
+  const path_name=useLocation()
   useEffect(() => {
     if (loginStatus === "succeed" && user) {
       navigate("/home"); // Chuyển hướng đến trang chính sau khi đăng nhập thành công\
@@ -41,7 +42,9 @@ const Login = () => {
       dispatch(resetLoginStatus());
     }
   }, [dispatch, navigate, loginStatus, user, loginError]);
-
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[path_name])
   return (
     <>
       <section>
@@ -81,15 +84,7 @@ const Login = () => {
                       type="submit"
                     >
                       {loginStatus === "loading" ? (
-                        <Audio
-                          height="20"
-                          width="20"
-                          radius="9"
-                          color="blue"
-                          ariaLabel="loading"
-                          wrapperStyle
-                          wrapperClass
-                        />
+                        <HashLoader size={25} color="#fff" />
                       ) : (
                         "Đăng nhập"
                       )}
